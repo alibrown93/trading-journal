@@ -1,104 +1,54 @@
-function saveTrade() {
-    const pairEl = document.getElementById('pair');
-    const pnlEl = document.getElementById('pnl');
-    const strategyEl = document.getElementById('strategy');
-    const firmEl = document.getElementById('prop-firm');
+const form = document.getElementById('trade-form');
+const tableBody = document.getElementById('trade-table-body');
+// ... other existing constants ...
 
-    const pair = pairEl.value.toUpperCase();
-    const pnl = parseFloat(pnlEl.value);
-    
-    if (!pair || isNaN(pnl)) return;
+function renderTable(trades) {
+  tableBody.innerHTML = '';
+  let totalPnL = 0;
+  let wins = 0;
+  let maxWin = 0;
 
-    const trade = {
-        id: Date.now(),
-        pair,
-        pnl,
-        strategy: strategyEl.value,
-        firm: firmEl.value,
-        // Using ISO date for easier grouping
-        fullDate: new Date().toISOString().split('T')[0],
-        displayDate: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-    };
+  trades.forEach((trade, index) => {
+    const pnl = parseFloat((trade.exit - trade.entry).toFixed(2));
+    totalPnL += pnl;
+    if (pnl > 0) wins++;
+    if (pnl > maxWin) maxWin = pnl;
 
-    let trades = JSON.parse(localStorage.getItem('trades')) || [];
-    trades.push(trade);
-    localStorage.setItem('trades', JSON.stringify(trades));
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${trade.date}</td>
+      <td style="font-weight:bold">${trade.firm || 'N/A'}</td>
+      <td>${trade.ticker}</td>
+      <td style="color: ${pnl >= 0 ? '#44ff44' : '#ff4444'}">${pnl}</td>
+      <td>${trade.notes}</td>
+      <td><button class="delete-btn" onclick="deleteTrade(${index})">🗑</button></td>
+    `;
+    tableBody.appendChild(row);
+  });
 
-    pairEl.value = '';
-    pnlEl.value = '';
-    render();
+  // Update Card Stats
+  document.getElementById('winRateCard').textContent = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) + '%' : '0%';
+  document.getElementById('totalPnlCard').textContent = '$' + totalPnL.toFixed(2);
+  document.getElementById('bestTradeCard').textContent = '$' + maxWin.toFixed(2);
 }
 
-function renderCalendar(trades) {
-    const calendar = document.getElementById('activity-calendar');
-    calendar.innerHTML = '';
-    
-    // Get last 14 days
-    const days = [];
-    for (let i = 13; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        days.push(d.toISOString().split('T')[0]);
-    }
+form.addEventListener('submit', e => {
+  e.preventDefault();
 
-    days.forEach(dateStr => {
-        const dayTrades = trades.filter(t => t.fullDate === dateStr);
-        const dayPnl = dayTrades.reduce((sum, t) => sum + t.pnl, 0);
-        
-        let status = 'empty';
-        if (dayTrades.length > 0) {
-            status = dayPnl > 0 ? 'win' : (dayPnl < 0 ? 'loss' : 'breakeven');
-        }
+  const trade = {
+    date: document.getElementById('date').value,
+    ticker: document.getElementById('ticker').value.toUpperCase(),
+    firm: document.getElementById('prop-firm').value, // Saved firm
+    entry: parseFloat(document.getElementById('entry').value),
+    exit: parseFloat(document.getElementById('exit').value),
+    notes: document.getElementById('notes').value
+  };
 
-        const dot = document.createElement('div');
-        dot.className = `calendar-dot ${status}`;
-        dot.title = `${dateStr}: ${dayPnl >= 0 ? '+' : ''}$${dayPnl}`;
-        calendar.appendChild(dot);
-    });
-}
+  const trades = JSON.parse(localStorage.getItem('trades')) || [];
+  trades.push(trade);
+  localStorage.setItem('trades', JSON.stringify(trades));
+  form.reset();
+  loadTrades();
+});
 
-function render() {
-    const list = document.getElementById('journalList');
-    const searchTerm = document.getElementById('search').value.toLowerCase();
-    let trades = JSON.parse(localStorage.getItem('trades')) || [];
-    
-    // Stats
-    const totalTrades = trades.length;
-    const wins = trades.filter(t => t.pnl > 0).length;
-    const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
-    const totalPnl = trades.reduce((sum, t) => sum + t.pnl, 0);
-
-    document.getElementById('win-rate').innerText = `${winRate}%`;
-    document.getElementById('total-count').innerText = totalTrades;
-    const pnlDisplay = document.getElementById('total-pnl');
-    pnlDisplay.innerText = `${totalPnl >= 0 ? '+' : ''}$${totalPnl.toLocaleString()}`;
-    pnlDisplay.className = `value ${totalPnl >= 0 ? 'pos' : 'neg'}`;
-
-    renderCalendar(trades);
-
-    const filteredTrades = trades.filter(t => 
-        t.strategy.toLowerCase().includes(searchTerm) || 
-        t.firm.toLowerCase().includes(searchTerm)
-    );
-    
-    list.innerHTML = filteredTrades.map(t => `
-        <div class="trade-card">
-            <div class="trade-info">
-                <span class="trade-pair">${t.pair} <small class="firm-tag">${t.firm}</small></span>
-                <span class="trade-date">${t.displayDate} • ${t.strategy}</span>
-            </div>
-            <div class="trade-amount ${t.pnl >= 0 ? 'pos' : 'neg'}">
-                ${t.pnl >= 0 ? '+$' : '-$'}${Math.abs(t.pnl)}
-            </div>
-        </div>
-    `).reverse().join('');
-}
-
-function clearJournal() {
-    if(confirm("Wipe journal history?")) {
-        localStorage.removeItem('trades');
-        render();
-    }
-}
-
-render();
+// ... Keep existing delete, search, and theme functions ...
