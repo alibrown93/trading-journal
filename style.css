@@ -1,46 +1,191 @@
-/* Calendar Styles */
-.calendar-section {
-    margin-bottom: 24px;
-    padding: 15px;
-    background: rgba(255,255,255,0.02);
-    border-radius: 16px;
-    border: 1px solid var(--border);
+/* Glassmorphism Style with Colorful Gradients */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+body {
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+  color: #222;
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
 }
 
-.calendar-grid {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    justify-content: space-between;
+body.dark {
+  background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+  color: #eee;
 }
 
-.calendar-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-    background: #1e293b; /* Empty color */
-    transition: transform 0.2s;
+.container {
+  max-width: 960px;
+  margin: 60px auto;
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* Safari support */
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #111;
 }
 
-.calendar-dot:hover { transform: scale(1.2); }
-.calendar-dot.win { background: var(--success); box-shadow: 0 0 8px var(--success); }
-.calendar-dot.loss { background: var(--danger); }
-.calendar-dot.breakeven { background: var(--text-dim); }
-
-/* Firm Tag Styling */
-.firm-tag {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    background: rgba(99, 102, 241, 0.2);
-    color: var(--accent);
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-left: 8px;
-    font-weight: 800;
+body.dark .container {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #eee;
 }
 
-.input-section .add-btn {
-    margin-top: 10px;
-    padding: 14px;
-    width: 100%;
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
 
+form,
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  border-radius: 15px;
+  border: none;
+  padding: 12px 15px;
+  font-size: 1em;
+  background: rgba(255, 255, 255, 0.2);
+  color: #222;
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease;
+}
+
+body.dark input[type="text"],
+body.dark input[type="number"],
+body.dark input[type="date"],
+body.dark textarea,
+body.dark select {
+  background: rgba(255, 255, 255, 0.1);
+  color: #eee;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #666;
+}
+
+button,
+#export-csv {
+  border-radius: 20px;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1em;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4);
+  transition: all 0.3s ease;
+}
+
+button:hover,
+#export-csv:hover {
+  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+  box-shadow: 0 6px 20px rgba(246, 182, 245, 0.7);
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding: 15px 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 15px;
+}
+
+canvas {
+  margin: 20px 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 15px;
+  width: 100% !important;
+  height: 250px !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+  margin-top: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+thead {
+  background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toggle-container {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000;
+}
+
+/* Switch Styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  top: 0; left: 0; right: 0; bottom: 0;
+  transition: .4s;
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
