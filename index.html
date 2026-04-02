@@ -5,46 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TradeLog Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="bg-glow"></div>
     
-    <div class="glass-container">
+    <div class="app-card">
         <header>
-            <h1>TradeLog</h1>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="label">Win Rate</span>
-                    <span id="win-rate" class="value">0%</span>
-                </div>
-                <div class="stat-card">
-                    <span class="label">Total P&L</span>
+            <div class="header-top">
+                <h1>TradeLog <span class="pro-badge">PRO</span></h1>
+                <button onclick="clearJournal()" class="icon-btn" title="Clear All">✕</button>
+            </div>
+            
+            <div class="stats-container">
+                <div class="main-stat">
+                    <span class="label">Net Profit</span>
                     <span id="total-pnl" class="value">$0</span>
                 </div>
+                <div class="stats-subgrid">
+                    <div class="stat-item">
+                        <span class="label">Win Rate</span>
+                        <span id="win-rate" class="sub-value">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Trades</span>
+                        <span id="total-count" class="sub-value">0</span>
+                    </div>
+                </div>
             </div>
+            <div class="progress-bar-bg"><div id="win-progress" class="progress-fill"></div></div>
         </header>
 
-        <section class="input-group">
-            <input type="text" id="pair" placeholder="Asset (e.g. BTC/USDT)">
-            <div class="row">
+        <section class="input-section">
+            <div class="input-row">
+                <input type="text" id="pair" placeholder="Asset (BTC/USD)">
                 <input type="number" id="pnl" placeholder="P&L ($)">
-                <select id="strategy">
-                    <option value="Scalp">Scalp</option>
-                    <option value="Swing">Swing</option>
-                    <option value="Breakout">Breakout</option>
-                    <option value="Trend">Trend</option>
-                </select>
             </div>
-            <button onclick="saveTrade()" class="main-btn">Log Trade</button>
+            <div class="input-row">
+                <select id="strategy">
+                    <option value="Scalp">⚡ Scalp</option>
+                    <option value="Swing">🌊 Swing</option>
+                    <option value="Breakout">💥 Breakout</option>
+                    <option value="Trend">📈 Trend</option>
+                </select>
+                <button onclick="saveTrade()" class="add-btn">Log Trade</button>
+            </div>
         </section>
 
-        <div class="divider"></div>
+        <div class="list-controls">
+            <h3>Recent History</h3>
+            <input type="text" id="search" placeholder="Filter strategy..." onkeyup="render()">
+        </div>
 
-        <section class="journal-wrapper" id="journalList">
-            </section>
-        
-        <button onclick="clearJournal()" class="clear-btn">Clear All Data</button>
+        <section class="journal-wrapper" id="journalList"></section>
     </div>
 
     <script src="app.js"></script>
