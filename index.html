@@ -14,7 +14,7 @@
         <header>
             <div class="header-top">
                 <h1>TradeLog <span class="pro-badge">PRO</span></h1>
-                <button onclick="clearJournal()" class="icon-btn" title="Clear All">✕</button>
+                <button onclick="clearJournal()" class="icon-btn">✕</button>
             </div>
             
             <div class="stats-container">
@@ -33,8 +33,12 @@
                     </div>
                 </div>
             </div>
-            <div class="progress-bar-bg"><div id="win-progress" class="progress-fill"></div></div>
         </header>
+
+        <section class="calendar-section">
+            <span class="label">Activity (Last 14 Days)</span>
+            <div id="activity-calendar" class="calendar-grid"></div>
+        </section>
 
         <section class="input-section">
             <div class="input-row">
@@ -42,19 +46,26 @@
                 <input type="number" id="pnl" placeholder="P&L ($)">
             </div>
             <div class="input-row">
+                <select id="prop-firm">
+                    <option value="Personal">🏦 Personal</option>
+                    <option value="FTMO">💎 FTMO</option>
+                    <option value="Topstep">📈 Topstep</option>
+                    <option value="Apex">🏹 Apex</option>
+                    <option value="FundingPips">💧 FundingPips</option>
+                </select>
                 <select id="strategy">
                     <option value="Scalp">⚡ Scalp</option>
                     <option value="Swing">🌊 Swing</option>
                     <option value="Breakout">💥 Breakout</option>
                     <option value="Trend">📈 Trend</option>
                 </select>
-                <button onclick="saveTrade()" class="add-btn">Log Trade</button>
             </div>
+            <button onclick="saveTrade()" class="add-btn">Log Trade</button>
         </section>
 
         <div class="list-controls">
             <h3>Recent History</h3>
-            <input type="text" id="search" placeholder="Filter strategy..." onkeyup="render()">
+            <input type="text" id="search" placeholder="Search strategy or firm..." onkeyup="render()">
         </div>
 
         <section class="journal-wrapper" id="journalList"></section>
