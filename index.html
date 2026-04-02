@@ -1,92 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Glassmorphic Trading Journal</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-  <div class="toggle-container">
-    <label id="theme-label" for="themeToggle">Light Mode</label>
-    <label class="switch">
-      <input type="checkbox" id="themeToggle" />
-      <span class="slider"></span>
-    </label>
+<div class="container">
+  <h1>Trading Journal</h1>
+
+  <div class="card-grid">
+    <div class="card"><h3>Win Rate</h3><p id="winRateCard">0%</p></div>
+    <div class="card"><h3>Total PnL</h3><p id="totalPnlCard">$0.00</p></div>
+    <div class="card"><h3>Best Trade</h3><p id="bestTradeCard">$0.00</p></div>
   </div>
 
-  <div class="container">
-    <h1>Trading Journal</h1>
-
-    <div class="card-grid">
-      <div class="card">
-        <h3>Win Rate</h3>
-        <p id="winRateCard">0%</p>
-      </div>
-      <div class="card">
-        <h3>Total PnL</h3>
-        <p id="totalPnlCard">$0.00</p>
-      </div>
-      <div class="card">
-        <h3>Best Trade</h3>
-        <p id="bestTradeCard">$0.00</p>
-      </div>
-    </div>
-
-    <form id="trade-form">
-      <input type="date" id="date" required />
-      <input type="text" id="ticker" placeholder="Ticker (e.g. AAPL)" required />
-      
-      <select id="prop-firm" required>
-        <option value="" disabled selected>Select Prop Firm</option>
-        <optgroup label="Top Rated">
-          <option value="FTMO">FTMO</option>
-          <option value="The 5%ers">The 5%ers</option>
-          <option value="Funding Pips">Funding Pips</option>
-        </optgroup>
-        <optgroup label="Futures">
-          <option value="Apex">Apex Trader Funding</option>
-          <option value="Topstep">Topstep</option>
-          <option value="MyFundedFx">MyFundedFx</option>
-        </optgroup>
-        <optgroup label="Others">
-          <option value="E8">E8 Funding</option>
-          <option value="Alpha Capital">Alpha Capital Group</option>
-          <option value="Goat Funded">Goat Funded Trader</option>
-        </optgroup>
-      </select>
-
-      <input type="number" id="entry" placeholder="Entry Price" step="0.01" required />
-      <input type="number" id="exit" placeholder="Exit Price" step="0.01" required />
-      <textarea id="notes" placeholder="Notes (optional)"></textarea>
-      <button type="submit">Add Trade</button>
-    </form>
-
-    <div class="controls">
-      <input type="text" id="search" placeholder="Search ticker..." />
-      <select id="monthFilter">
-        <option value="">All Months</option>
-      </select>
-      <button id="export-csv">Export CSV</button>
-    </div>
-
-    <canvas id="pnlChart"></canvas>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Firm</th> <th>Ticker</th>
-          <th>PnL</th>
-          <th>Notes</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody id="trade-table-body"></tbody>
-    </table>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+  <form id="trade-form">
+    <input type="date" id="date" required />
+    <input type="text" id="ticker" placeholder="Ticker" required />
+    <select id="prop-firm" required>
+      <option value="" disabled selected>Select Prop Firm</option>
+      <optgroup label="Popular Firms">
+        <option value="FTMO">FTMO</option>
+        <option value="Apex">Apex Trader Funding</option>
+        <option value="Topstep">Topstep</option>
+        <option value="Funding Pips">Funding Pips</option>
+        <option value="The 5%ers">The 5%ers</option>
+      </optgroup>
+    </select>
+    <input type="number" id="entry" placeholder="Entry" step="0.01" required />
+    <input type="number" id="exit" placeholder="Exit" step="0.01" required />
+    <button type="submit">Add Trade</button>
+  </form>
+  
+  <canvas id="pnlChart"></canvas>
+  
+  <table id="trade-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Firm</th>
+        <th>Ticker</th>
+        <th>PnL</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody id="trade-table-body"></tbody>
+  </table>
+</div>
