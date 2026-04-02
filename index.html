@@ -1,76 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TradeLog Pro</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Glassmorphic Trading Journal</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="bg-glow"></div>
-    
-    <div class="app-card">
-        <header>
-            <div class="header-top">
-                <h1>TradeLog <span class="pro-badge">PRO</span></h1>
-                <button onclick="clearJournal()" class="icon-btn">✕</button>
-            </div>
-            
-            <div class="stats-container">
-                <div class="main-stat">
-                    <span class="label">Net Profit</span>
-                    <span id="total-pnl" class="value">$0</span>
-                </div>
-                <div class="stats-subgrid">
-                    <div class="stat-item">
-                        <span class="label">Win Rate</span>
-                        <span id="win-rate" class="sub-value">0%</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">Trades</span>
-                        <span id="total-count" class="sub-value">0</span>
-                    </div>
-                </div>
-            </div>
-        </header>
+  <div class="toggle-container">
+    <label id="theme-label" for="themeToggle">Light Mode</label>
+    <label class="switch">
+      <input type="checkbox" id="themeToggle" />
+      <span class="slider"></span>
+    </label>
+  </div>
 
-        <section class="calendar-section">
-            <span class="label">Activity (Last 14 Days)</span>
-            <div id="activity-calendar" class="calendar-grid"></div>
-        </section>
+  <div class="container">
+    <h1>Trading Journal</h1>
 
-        <section class="input-section">
-            <div class="input-row">
-                <input type="text" id="pair" placeholder="Asset (BTC/USD)">
-                <input type="number" id="pnl" placeholder="P&L ($)">
-            </div>
-            <div class="input-row">
-                <select id="prop-firm">
-                    <option value="Personal">🏦 Personal</option>
-                    <option value="FTMO">💎 FTMO</option>
-                    <option value="Topstep">📈 Topstep</option>
-                    <option value="Apex">🏹 Apex</option>
-                    <option value="FundingPips">💧 FundingPips</option>
-                </select>
-                <select id="strategy">
-                    <option value="Scalp">⚡ Scalp</option>
-                    <option value="Swing">🌊 Swing</option>
-                    <option value="Breakout">💥 Breakout</option>
-                    <option value="Trend">📈 Trend</option>
-                </select>
-            </div>
-            <button onclick="saveTrade()" class="add-btn">Log Trade</button>
-        </section>
-
-        <div class="list-controls">
-            <h3>Recent History</h3>
-            <input type="text" id="search" placeholder="Search strategy or firm..." onkeyup="render()">
-        </div>
-
-        <section class="journal-wrapper" id="journalList"></section>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Win Rate</h3>
+        <p id="winRateCard">0%</p>
+      </div>
+      <div class="card">
+        <h3>Total PnL</h3>
+        <p id="totalPnlCard">$0.00</p>
+      </div>
+      <div class="card">
+        <h3>Best Trade</h3>
+        <p id="bestTradeCard">$0.00</p>
+      </div>
     </div>
 
-    <script src="app.js"></script>
+    <form id="trade-form">
+      <input type="date" id="date" required />
+      <input type="text" id="ticker" placeholder="Ticker (e.g. AAPL)" required />
+      
+      <select id="prop-firm" required>
+        <option value="" disabled selected>Select Prop Firm</option>
+        <optgroup label="Top Rated">
+          <option value="FTMO">FTMO</option>
+          <option value="The 5%ers">The 5%ers</option>
+          <option value="Funding Pips">Funding Pips</option>
+        </optgroup>
+        <optgroup label="Futures">
+          <option value="Apex">Apex Trader Funding</option>
+          <option value="Topstep">Topstep</option>
+          <option value="MyFundedFx">MyFundedFx</option>
+        </optgroup>
+        <optgroup label="Others">
+          <option value="E8">E8 Funding</option>
+          <option value="Alpha Capital">Alpha Capital Group</option>
+          <option value="Goat Funded">Goat Funded Trader</option>
+        </optgroup>
+      </select>
+
+      <input type="number" id="entry" placeholder="Entry Price" step="0.01" required />
+      <input type="number" id="exit" placeholder="Exit Price" step="0.01" required />
+      <textarea id="notes" placeholder="Notes (optional)"></textarea>
+      <button type="submit">Add Trade</button>
+    </form>
+
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search ticker..." />
+      <select id="monthFilter">
+        <option value="">All Months</option>
+      </select>
+      <button id="export-csv">Export CSV</button>
+    </div>
+
+    <canvas id="pnlChart"></canvas>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Firm</th> <th>Ticker</th>
+          <th>PnL</th>
+          <th>Notes</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="trade-table-body"></tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
